@@ -17,3 +17,6 @@ The main goal of this script is to re-create a vpnconfig alternative that can au
 Dynamic packages are also minimized to remove useless things if like us you only use VPN and firewall.
 
 More details here: https://github.com/qqt-lo4/CheckPoint_CustomizePackage/blob/main/CheckPoint_CustomizePackage.docx 
+
+## Licence
+CC-BY-NC-SA
