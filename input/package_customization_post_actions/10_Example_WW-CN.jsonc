@@ -1,0 +1,19 @@
+{
+    "Description": "Example WW+CN EPS (Copy Run_VPN_Startup_Script, Generate runner)",
+    "configuration": {
+        "post-actions": [
+			{
+				"Action": "Copy-Item",
+				"MessageBefore": "Copy vpn connection script",
+				"Arguments": {
+					"Source": "%InputDir%\\scripts\\vpn_startup_script\\Run_VPN_Startup_Script.exe",
+					"Destination": "%outputFolder%\\Sources\\"
+				}
+			},
+			{
+				"Action": "New-Runner",
+				"MessageBefore": "Generate EXE script to run the PS1 file"
+			}
+		]
+    }
+}

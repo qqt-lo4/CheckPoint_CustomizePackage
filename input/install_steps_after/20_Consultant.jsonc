@@ -1,0 +1,41 @@
+{
+    "Description": "Example WW Consultant",
+    "install": {
+		"steps_after": [
+			{
+				"Action": "Wait-TracSrvWrapperServiceRunning",
+				"MessageBefore": "Waiting service TracSrvWrapper running",
+				"Arguments": {
+					"Timeout": 60000
+				}
+			},
+			{
+				"Action": "Set-EndpointSDLState",
+				"MessageBefore": "Disabling SDL",
+				"Arguments": {
+					"Value": "disabled"
+				}
+			},
+			{
+				"Action": "Set-EndpointLogLevel",
+				"MessageBefore": "Changing log level to basic",
+				"Arguments": {
+					"Value": "basic"
+				}
+			},
+			{
+				"Action": "Add-CertificateFingerprint",
+				"MessageBefore": "Adding \"srv-cp VPN Certificate\" fingerprint",
+				"Arguments": {
+					"AcceptedCN": "srv-cp VPN Certificate",
+					"Fingerprint": "APS MET NEED SNAG ..."
+				}
+			},
+			{
+				"Action": "Update-TracDefaults",
+				"MessageBefore": "Changing trac.defaults file"
+			}
+		]
+    },
+	"Filter": "$Variables[\"site\"] -in @(\"vpn.example.com\")"
+}

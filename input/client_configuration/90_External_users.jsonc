@@ -1,0 +1,28 @@
+{
+    "name": "External users",
+	"details": "",
+    "configuration": {
+		"trac_defaults": {
+			// Always connect
+			"neo_always_connected": "false",
+			// Hotspot registration
+			"hotspot_detection_enabled": "false",
+			"hotspot_registration_enabled": "false",
+			"open_default_browser_for_hotspot": "false",
+			"global_hotspot_detection_enabled": "false",
+			// DNS management
+			"restart_dns_service_on_vna_init": "true",
+			"flush_dns_cache": "\"true\"",
+			"do_proxy_replacement": "\"false\"",
+			// Machine auth disabled
+			"enable_machine_auth": "false",
+			"machine_tunnel_site": "",
+			// Other certificate options
+			"display_capi_friendly_name": "1",
+			"display_expired_certificates": "0",
+			"display_client_auth_certificates_only": "1",
+			// Other options
+			"save_vpn_user_per_sid": "true"
+		}
+    }
+}

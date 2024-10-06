@@ -1,0 +1,11 @@
+{
+    "Description": "External EPS (Build runner only)",
+    "configuration": {
+        "post-actions": [
+			{
+				"Action": "New-Runner",
+				"MessageBefore": "Generate EXE script to run the PS1 file"
+			}
+		]
+    }
+}

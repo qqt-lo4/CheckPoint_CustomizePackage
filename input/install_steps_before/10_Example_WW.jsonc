@@ -1,0 +1,15 @@
+{
+    "Description": "Example WW",
+    "install": {
+		"steps_before": [
+			{
+				"Action": "Write-ProductToHost"
+			},
+			{
+				"Action": "Stop-EndpointSecurity",
+				"Condition": "$Variables[\"Product\"] -eq \"Check Point VPN\""
+			}
+		]
+    },
+	"Filter": "$Variables[\"site\"] -in @(\"vpn.example.com\")"
+}
