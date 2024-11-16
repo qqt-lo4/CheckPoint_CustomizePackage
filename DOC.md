@@ -61,7 +61,7 @@ Then run
 ```
 When you open the script for the first time, you will only be able to add an external file :
 ```
-------- Please select an item: -------
+`#0969DA` ------- Please select an item: -------
 No Check Point package in input folder
 --------------------------------------
  Select Another File 
