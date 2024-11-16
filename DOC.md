@@ -61,7 +61,7 @@ Then run
 ```
 When you open the script for the first time, you will only be able to add an external file :
 ```
-`#0969DA` ------- Please select an item: -------
+------- Please select an item: -------
 No Check Point package in input folder
 --------------------------------------
  Select Another File 
@@ -80,3 +80,8 @@ Double quotes are not mandatory. They are added when you copy a file path using 
 
 Next steps will depend on if you selected a MSI or an EXE file
 
+<div style="color:red; background:lightgrey">
+<code>
+I want to have this text in red on grey.
+</code>
+</div>
