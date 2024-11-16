@@ -1,4 +1,5 @@
-#The beginning of this project
+# The beginning of this project
+
 Since my new job (a few years ago), my company used to create pre-configured Endpoint Security packages with trac.config (an encrypted file that contains the VPN site config) included using AdminMode.bat.
 Then we migrated to managed VPN clients by using SmartEndpoint (because of the firewall included)
 Then we had to use vpnconfig (https://support.checkpoint.com/results/sk/sk122574) because we also edited trac.defaults file
