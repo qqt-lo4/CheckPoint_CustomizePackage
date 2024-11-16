@@ -32,6 +32,7 @@ This project is composed of two scripts:
 -	Install-CheckPointEndpointSecurity.ps1
 The first script is the one you wan to run. The second is copied automatically at the end of package generation, and you will use it to run setup on computers.
 Here is the folder list:
+
 | Folder  | Details                                         |
 | ------- | ----------------------------------------------- |
 | Input	  | Contains response files used by the script      |
