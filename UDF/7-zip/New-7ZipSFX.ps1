@@ -12,5 +12,5 @@ function New-7ZipSFX {
         [Parameter(Mandatory)]
         [string]$OutFile
     )
-    cmd /c copy /b $SevenZipHeaderFile + $SFXConfigFile + $ArchiveFile $OutFile
+    &cmd /c copy /b """$SevenZipHeaderFile""" + """$SFXConfigFile""" + """$ArchiveFile""" """$OutFile"""
 }

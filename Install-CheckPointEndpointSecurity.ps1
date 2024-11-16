@@ -56,21 +56,26 @@ $Variables={
 #endregion Include
 
 #region Functions
+
 function Get-SourceFile {
     Param(
         [Parameter(Mandatory, Position = 0)]
         [string[]]$FileName
     )
+    $sResult = $null
     foreach ($item in $FileName) {
         $sResult = if (Test-Path -Path "$PSScriptRoot\Sources\$item" -PathType Leaf) {
             "$PSScriptRoot\Sources\$item"
-        } else {
+        } elseif (Test-Path -Path "$PSScriptRoot\Sources\CheckPoint_Packages\$packageToInstall\$item" -PathType Leaf) {
             "$PSScriptRoot\Sources\CheckPoint_Packages\$packageToInstall\$item"
         }
-        return Get-Item $sResult
     }
-    return $null
+    if ($null -ne $sResult) {
+        $sResult = Get-Item $sResult
+    }
+    return $sResult
 }
+
 
 function PackageInstall_Write-LogInfo {
     Param(
