@@ -21,6 +21,7 @@ function ConvertTo-EPSInstalledFeatures {
     Param(
         [int]$Features,
         [switch]$StringOutput,
+        [char]$FeatureSeparatorChar = "-",
         [switch]$RemoveDA
     )
     $aResult = @()
@@ -32,7 +33,7 @@ function ConvertTo-EPSInstalledFeatures {
         }
     }
     if ($StringOutput) {
-        return $aResult -join ","
+        return $aResult -join $FeatureSeparatorChar
     } else {
         return $aResult
     }
