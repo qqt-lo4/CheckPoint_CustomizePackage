@@ -41,11 +41,42 @@ Here is the folder list:
 | UDF     | Contains generic functions used by the script   |
 
 Let’s describe the most interesting folder, the “input” folder:
-Folder	Details
-client_configuration	Contains settings to edit trac.defaults
-install_general_config	Contains settings like registry tagging and log folder for installer
-install_steps_after	This folder contains actions that will be ran after installation of EPS.msi
-install_steps_before	This folder contains actions that will be ran before installation of EPS.msi
-package_customization_msi	Allows to change SDL and Fixed MAC (similar to VPNconfig.exe). NoKeep is the override trac.config option
-package_customization_post_actions	Actions ran at the end of package generation. Can be used to copy items ran during installation or generate an EXE runner that will run Install-CheckPointEndpointSecurity.ps1 
-site	Contains VPN sites that can be included inside packages
+
+| Folder                             | Details                                                                                                                                                                        |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| client_configuration               | Contains settings to edit trac.defaults                                                                                                                                        |
+| install_general_config             | Contains settings like registry tagging and log folder for installer                                                                                                           |
+| install_steps_after                | This folder contains actions that will be ran after installation of EPS.msi                                                                                                    |
+| install_steps_before               | This folder contains actions that will be ran before installation of EPS.msi                                                                                                   |
+| package_customization_msi          | Allows to change SDL and Fixed MAC (similar to VPNconfig.exe). NoKeep is the override trac.config option                                                                       |
+| package_customization_post_actions | Actions ran at the end of package generation. Can be used to copy items ran during installation or generate an EXE runner that will run Install-CheckPointEndpointSecurity.ps1 |
+| site                               | Contains VPN sites that can be included inside packages                                                                                                                        |
+
+# How it works
+Because of the way packages are made, steps are not exactly the same but similar
+First step: open a powershell window
+Then run 
+```
+.\CheckPoint_CustomizePackage.ps1
+```
+When you open the script for the first time, you will only be able to add an external file :
+```
+------- Please select an item: -------
+No Check Point package in input folder
+--------------------------------------
+ Select Another File 
+Press Enter or “o” to select another file
+```
+Then enter the file path of an Endpoint package generated through SmartEndpoint (or the webui version), and press enter:
+```
+------- Please select an item: -------
+No Check Point package in input folder
+--------------------------------------
+ Select Another File 
+
+Please enter a file path: "I:\Scripts\PowerShell\input\CheckPoint_package\EPS_E87.00_SRV-CP\EPS.msi"
+```
+Double quotes are not mandatory. They are added when you copy a file path using “Ctrl” + “Shift” + “C” under Windows 11, so I added support for path with double quotes.
+
+Next steps will depend on if you selected a MSI or an EXE file
+
