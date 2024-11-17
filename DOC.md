@@ -355,16 +355,175 @@ Generate EXE script to run the PS1 file
 # Configuration files
 ## File structure
 At the root of each files, there are several items:
--	configuration
--	properties used to display information during script execution
-  o	Name
-  o	Details
-  o	Authentication Method
-  o	…
--	filter
+- configuration
+- properties used to display information during script execution
+  - Name
+  - Details
+  - Authentication Method
+  - …
+- filter
+
 Configuration contains what will be configured
 Filter can be used to not display some json files based on previous answers
 During the whole script, a variable (a hashtable) is filled by some important values like the Endpoint server name, the VPN site, the package type. 
 The filter content is a small piece of powershell (with some backslash to escape double quotes, because double quotes end strings) to test the $Variables content. Here is an example to test the selected vpn site:
- 
+
+![image](https://github.com/user-attachments/assets/fbda604a-9b32-4572-a0e3-7072e9c2439e)
+
 All configuration files accept comments
+
+## Site
+First three properties are used when you display the different json files when using the script. 
+```json
+{
+    "Site": "vpn.example.com",
+    "Authentication Method": "certificate",
+    "Details": "Logs = basic",
+    "configuration" : {
+        "site": "vpn.example.com",
+        "displayName": "vpn.example.com",
+        // Valid values : username-password, certificate, p12-certificate, challenge-response, securIDKeyFob, securIDPinPad, SoftID
+        "authenticationMethod": "certificate",
+        "sdl_enabled": "false",
+        // Valid values : basic, extended
+        "debug_mode": "basic"
+    }
+}
+```
+The “configuration” node will contain data to create the site. 
+| Property	            | Description                                                                                                                                                                |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| site	                | This where you put either the DNS name or an IP of your VPN site                                                                                                           |
+| displayName	         | If you put an IP above, displaying a friendly name would be great                                                                                                          |
+| authenticationMethod	| Here are all supported authentication methods: username-password, certificate, p12-certificate, challenge-response, securIDKeyFob, securIDPinPad, SoftID                   |
+| sdl_enabled	         | If you use certificates, you will have to disable SDL. If you use username-password, you can enable SDL here                                                              	|
+| debug_mode	          | This is where you configure the log level. Possible options are “basic” or “extended”. However, you should not use “extended” as it will decrease VPN bandwidth (sk177125)	|
+
+## client_configuration
+This is where you can choose a file that will configure trac.defaults. Here is an example I use:
+```json
+{
+    "name": "Example CN",
+    "details": "Filtered cerfiticates, machine auth enabled",
+    "configuration": {
+        "trac_defaults":{
+            // Always connect
+            "neo_always_connected": "true",
+            // Hotspot registration
+            "hotspot_detection_enabled": "true",
+            "hotspot_registration_enabled": "true",
+            "open_default_browser_for_hotspot": "true",
+            "global_hotspot_detection_enabled": "true",
+            // DNS management
+            "restart_dns_service_on_vna_init": "true",
+            "flush_dns_cache": "\"true\"",
+            "do_proxy_replacement": "\"false\"",
+            // Certificate filtering
+            "cert_filter_issuer": "CN=Example Europe Certification Authority,*&#CN=Example America Certification Authority,*&#CN=Example Asia Certification Authority,*&#O=srv-cp.example.fr,*&#",
+            "cert_filter_subject": "",
+            "cert_filter_template": "Example User EU SHA-2&#Example User AM SHA-2&#Example User CN SHA-2&#*&#",
+            "cert_filter_enhanced_key_usage": "",
+            "cert_filter_condition": "or",
+            "cert_filter_check": "1",
+            // Machine auth disabled
+            "enable_machine_auth": "true",
+            "machine_tunnel_site": "\"vpn.example.cn\"",
+            // Other certificate options
+            "display_capi_friendly_name": "1",
+            "display_expired_certificates": "0",
+            "display_client_auth_certificates_only": "1",
+            // Other options
+            "save_vpn_user_per_sid": "true"
+        }
+    },
+    "Filter": "$Variables[\"site\"] -in @(\"vpn.example.cn\")"
+}
+```
+Properties you want to change in trac.defaults files should be configured in configuration.trac_defaults section.
+Since E84.10, Endpoint Security can filter certificates show in the connection dialog. Go check sk169453 if you want to know more.
+You will find more info for other parameters in sk75221
+
+## install_general_config
+```json
+{
+    "Description": "Example",
+    "install": {
+        "Log":{
+            "Folder": "C:\\Windows\\Example\\logs\\",
+            "FallbackFolder": "%TEMP%\\"
+        },
+        "tag": {
+            "dotag":false,
+            "ignoretag":true,
+            "Manufactured": "Example IT",
+            "PackageVersion": "1.0",
+            "RegFolder": "Software\\Example\\Applications"
+        }
+    }
+}
+```
+During the Install-CheckPointEndpointSecurity.ps1 script running, all lines displayed in console window are logged in a LOG file written in Log.Folder. If this folder does not exist, log will be written in Log.FallbackFolder
+Tag section can be used to mark the registry in the tag.RegFolder (if dotag is true)
+package_customization_msi
+```json
+{
+    "Description": "Example WW+CN EPS (SDL Disabled)",
+    "configuration": {
+        "MSI_customization": {
+            "SDL_ENABLED": "NO",
+            "FIXED_MAC": "NO",
+            "NoKeep": "YES"
+        }
+    }
+}
+```
+This folder contains properties modified inside the MSI
+vpnconfig allowed to modify several properties:
+| **Option**          | **MSI property name** | **Possible values** |
+| ------------------- | --------------------- | ------------------- |
+| Secure Domain Logon | SDL_ENABLED           | NO\|YES             |
+| Fixed MAC           | FIXED_MAC             | NO\|YES             |
+| No Office Mode      | NO_OFFICE_MODE        | 0\|1                |
+
+I never understood the “No Office Mode” option but you can also configure it if you want.
+NoKeep is another property modified by vpnconfig. It is set to “YES” when you ticked the “overwrite user’s configuration when upgrading”.
+
+## package_customization_post_actions
+```json
+{
+    "Description": "Example WW (Copy Reconnect and Run_VPN_Startup_Script.exe)",
+    "configuration": {
+        "post-actions": [
+            {
+                "Action": "Copy-Item",
+                "MessageBefore": "Copy Reconnect script",
+                "Arguments": {
+                    "Source": "%InputDir%\\scripts\\Reconnect\\Reconnect.exe",
+                    "Destination": "%outputFolder%\\"
+                }
+            },
+            {
+                "Action": "Copy-Item",
+                "MessageBefore": "Copy vpn connection script",
+                "Arguments": {
+                    "Source": "%InputDir%\\scripts\\vpn_startup_script\\Run_VPN_Startup_Script.exe",
+                    "Destination": "%outputFolder%\\Sources\\"
+                }
+            },
+            {
+                "Action": "New-Runner",
+                "MessageBefore": "Generate EXE script to run the PS1 file"
+            }
+        ]
+    }
+}
+```
+
+These files are used at the end of package creation. 
+Post-actions are functions included in CheckPoint_CustomizePackage at the end of package creation. MessageBefore is a string that will be written to host before running each action.
+There are two actions possible:
+| **Function** | **Details**                                                                                                                                                                                                                                                                              |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Copy-Item    | If you need to run files when you are installing Endpoint Security, you may need to copy them from a repository to the output folder. Copy-Item will do this.                                                                                                                            |
+| New-Runner   | As the MessageBefore suggests, New-Runner will create an EXE to run the Install-CheckPointEndpointSecurity.ps1 script. This EXE is built using AutoIt (needs to be installed to run) and can include the uninstall password. All arguments passed to the EXE will be assigned to the PS1 |
+
