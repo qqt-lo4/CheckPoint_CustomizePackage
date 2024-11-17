@@ -80,8 +80,9 @@ Double quotes are not mandatory. They are added when you copy a file path using 
 
 Next steps will depend on if you selected a MSI or an EXE file
 
-<div style="color:red; background:lightgrey">
-<code>
-I want to have this text in red on grey.
-</code>
-</div>
+<pre style="background-color: #1e1e1e; color: white; padding: 10px; border-radius: 5px;">
+<span style="color: #3B78FF;">------- Please select an item: -------</span>
+<span style="color: #CE9178;">No Check Point package in input folder</span>
+<span style="color: #3B78FF;">--------------------------------------</span>
+<span style="color: #569CD6;"> Select Another File </span>
+</pre>
