@@ -63,6 +63,7 @@ When you open the script for the first time, you will only be able to add an ext
 
 <div align="center">
 ![image](https://github.com/user-attachments/assets/5b4f0b81-10be-4278-ac9e-1b877cb81ca7)
+</div>
 
 Press Enter or “o” to select another file
 Then enter the file path of an Endpoint package generated through SmartEndpoint (or the webui version), and press enter:
