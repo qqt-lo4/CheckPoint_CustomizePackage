@@ -16,7 +16,7 @@ But it was a difficult task to provide a new VPN client because of the steps amo
 The main goal of this script is to re-create a vpnconfig alternative that can automate all steps. Dynamic packages are also managed by this script (because since they upgraded the antimalware blade, now the MSI minimum size is 900MB...).
 Dynamic packages are also minimized to remove useless things if like us you only use VPN and firewall.
 
-More details here: https://github.com/qqt-lo4/CheckPoint_CustomizePackage/blob/main/CheckPoint_CustomizePackage.docx 
+More details here: [doc](DOC.md)
 
 ## Licence
 CC-BY-NC-SA
