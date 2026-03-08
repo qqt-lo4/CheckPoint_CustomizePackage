@@ -1,0 +1,23 @@
+{
+    "Description": "Example WW (Reconnect to SRV-CP)",
+    "install": {
+		"steps_before": [
+			{
+				"Action": "Write-ProductToHost"
+			},
+			{
+				"Action": "Stop-EndpointSecurity",
+				"Condition": "$Variables[\"Product\"] -eq \"Check Point VPN\""
+			},
+			{
+				"Action": "Invoke-ExternalCommand",
+				"MessageBefore": "Reconnect to management",
+				"Arguments": {
+					"Command": "%PSScriptRoot%\\Reconnect.exe"
+				},
+				"Condition": "$Variables[\"Product\"] -ne \"\""
+			}
+		]
+    },
+	"Filter": "$Variables[\"site\"] -in @(\"vpn.example.com\")"
+}

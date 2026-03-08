@@ -1,0 +1,14 @@
+{
+    "Site": "vpn.example.com",
+	"Authentication Method": "certificate",
+	"Details": "Logs = basic",
+    "configuration" : {
+        "site": "vpn.example.com",
+        "displayName": "vpn.example.com",
+        // Valid values : username-password, certificate, p12-certificate, challenge-response, securIDKeyFob, securIDPinPad, SoftID
+        "authenticationMethod": "certificate",
+		"sdl_enabled": "false",
+		// Valid values : basic, extended
+		"debug_mode": "basic"
+    }
+}

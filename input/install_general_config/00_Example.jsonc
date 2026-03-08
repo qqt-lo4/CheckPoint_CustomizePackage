@@ -1,0 +1,16 @@
+{
+    "Description": "Example",
+    "install": {
+		"Log":{
+			"Folder": "C:\\Windows\\Example\\logs\\",
+            "FallbackFolder": "%TEMP%\\"
+        },
+        "tag": {
+            "dotag":false,
+            "ignoretag":true,
+            "Manufactured": "Example IT",
+            "PackageVersion": "1.0",
+			"RegFolder": "Software\\Example\\Applications"
+        }
+    }
+}

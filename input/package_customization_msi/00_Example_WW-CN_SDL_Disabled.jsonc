@@ -1,0 +1,10 @@
+{
+    "Description": "Example WW+CN EPS (SDL Disabled)",
+    "configuration": {
+        "MSI_customization": {
+            "SDL_ENABLED": "NO",
+            "FIXED_MAC": "NO",
+            "NoKeep": "YES"
+        }
+    }
+}

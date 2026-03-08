@@ -1,0 +1,5 @@
+# Generated output packages
+output/
+
+# Downloaded/copied source packages
+input/packages/

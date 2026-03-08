@@ -1,0 +1,15 @@
+{
+    "Description": "Example WW Consultant",
+    "install": {
+		"Log":{
+			"Folder": "%TEMP%\\"
+        },
+        "tag": {
+            "dotag":false,
+            "ignoretag":true,
+            "Manufactured": "Example IT",
+            "PackageVersion": "1.0",
+			"RegFolder": "Software\\Example\\Applications"
+        }
+    }
+}

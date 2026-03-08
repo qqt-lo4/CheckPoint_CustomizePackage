@@ -1,0 +1,27 @@
+{
+    "Description": "Example WW (Copy Reconnect and Run_VPN_Startup_Script.exe)",
+    "configuration": {
+        "post-actions": [
+			{
+				"Action": "Copy-Item",
+				"MessageBefore": "Copy Reconnect script",
+				"Arguments": {
+					"Source": "%InputDir%\\scripts\\Reconnect\\Reconnect.exe",
+					"Destination": "%outputFolder%\\"
+				}
+			},
+			{
+				"Action": "Copy-Item",
+				"MessageBefore": "Copy vpn connection script",
+				"Arguments": {
+					"Source": "%InputDir%\\scripts\\vpn_startup_script\\Run_VPN_Startup_Script.exe",
+					"Destination": "%outputFolder%\\Sources\\"
+				}
+			},
+			{
+				"Action": "New-Runner",
+				"MessageBefore": "Generate EXE script to run the PS1 file"
+			}
+		]
+    }
+}
