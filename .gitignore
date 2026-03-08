@@ -3,3 +3,6 @@ output/
 
 # Downloaded/copied source packages
 input/packages/
+
+# Archived versions
+versions/
