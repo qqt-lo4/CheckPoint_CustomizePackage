@@ -45,6 +45,10 @@ function Read-CLIDialogValidatedValue {
         Switch parameter. When set, adds a Cancel button to the dialog. If user cancels,
         the function returns a DialogResult.Action.Cancel result instead of a value.
 
+    .PARAMETER AllowBack
+        Switch parameter. When set, adds a Back button to the dialog.
+        Returns a DialogResult.Action.Back object when pressed.
+
     .PARAMETER AsSecureString
         Switch parameter. Intended for password/sensitive input that should be returned as SecureString.
         Note: This parameter is defined but the implementation is not yet complete in the current version.
@@ -122,7 +126,7 @@ function Read-CLIDialogValidatedValue {
         Author: Loïc Ade
         Created: 2023-05-29
         Modified: 2025-10-27
-        Version: 2.0.0
+        Version: 2.1.0
         Dependencies: New-CLIDialogText, New-CLIDialogTextBox, New-CLIDialogButton,
                      New-CLIDialogObjectsRow, Invoke-CLIDialog, New-DialogResultValue
 
@@ -257,6 +261,9 @@ function Read-CLIDialogValidatedValue {
 
         CHANGELOG:
 
+        Version 2.1.0 - 2026-03-14 - Loïc Ade
+            - Added AllowBack parameter to display a Back button
+
         Version 2.0.0 - 2025-10-27 - Loïc Ade
             - Dual validation mode: regex string or scriptblock
             - Optional default value with automatic empty string handling
@@ -277,6 +284,7 @@ function Read-CLIDialogValidatedValue {
         [string]$PropertyName,
         [object]$ValidationMethod,
         [switch]$AllowCancel,
+        [switch]$AllowBack,
         [switch]$AsSecureString,
         [string]$ErrorMessage = "Invalid value, please enter value with correct format.",
         [string]$DefaultValue
@@ -286,6 +294,9 @@ function Read-CLIDialogValidatedValue {
     )
     if ($AllowCancel) {
         $aButtons += New-CLIDialogButton -Text "&Cancel" -Cancel
+    }
+    if ($AllowBack) {
+        $aButtons += New-CLIDialogButton -Text "&Back" -Back
     }
     $hTextboxParameters = @{
         Name = $PropertyName

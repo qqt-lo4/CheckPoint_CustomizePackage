@@ -67,6 +67,9 @@
     Process {
         while ($true) {
             $oDialogItem = Invoke-CLIDialog -InputObject $oDialog -Execute
+            if ($null -eq $oDialogItem -or $null -eq $oDialogItem.Value) {
+                continue
+            }
             $oDialogResult = switch ($oDialogItem.Value.PSObject.TypeNames[0]) {
                 "MenuAction" {
                     $sAction = $oDialogItem.Action
@@ -82,6 +85,9 @@
                 "Menu" {
                     Invoke-Menu -Menu $oDialogItem.Value -Depth ($Depth + 1)
                 }
+            }
+            if ($null -eq $oDialogResult) {
+                continue
             }
             switch ($oDialogResult.PSObject.TypeNames[0]) {
                 "DialogResult.Action.Exit" {

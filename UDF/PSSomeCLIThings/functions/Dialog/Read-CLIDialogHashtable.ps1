@@ -53,6 +53,10 @@
         Switch parameter. When set, adds a Cancel button to the dialog. If user cancels,
         the function returns $null. Without this switch, only the OK button is displayed.
 
+    .PARAMETER AllowBack
+        Switch parameter. When set, adds a Back button to the dialog.
+        Returns a DialogResult.Action.Back object when pressed.
+
     .OUTPUTS
         Returns a hashtable containing the entered values with property names as keys.
         Returns $null if user cancels (when AllowCancel is set) or if validation fails.
@@ -123,7 +127,7 @@
         Module: CLIDialog
         Author: Loïc Ade
         Created: 2025-04-19
-        Version: 1.0.0
+        Version: 1.1.0
         Dependencies: New-CLIDialogSeparator, New-CLIDialogTextBox, New-CLIDialogButton,
                      New-CLIDialogObjectsRow, Invoke-CLIDialog
 
@@ -249,6 +253,9 @@
             - IDictionary support for flexible input
             - Clean hashtable output with GetValue($true)
             - Integration with CLI Dialog framework
+
+        Version 1.1.0 - 2026-03-14 - Loïc Ade
+            - Added AllowBack parameter to display a Back button
     #>
     [CmdletBinding()]
     Param(
@@ -261,7 +268,8 @@
         [string]$PropertyAlign = "Left",
         [string]$Prefix = "  ",
         [string]$FocusedPrefix = "> ",
-        [switch]$AllowCancel
+        [switch]$AllowCancel,
+        [switch]$AllowBack
     )
     Begin {
         $aDialogLines = @()
@@ -291,12 +299,17 @@
         if ($AllowCancel) {
             $aButtonsLineItems += New-CLIDialogButton -Text "&Cancel" -Cancel
         }
+        if ($AllowBack) {
+            $aButtonsLineItems += New-CLIDialogButton -Back -Text "&Back"
+        }
         $aDialogLines += New-CLIDialogObjectsRow -Header " " -Prefix $Prefix -FocusedPrefix $FocusedPrefix -HeaderSeparator "  " -Row $aButtonsLineItems
     }
     Process {
         $oDialogResult = Invoke-CLIDialog -InputObject $aDialogLines -Validate -ErrorDetails
         if ($oDialogResult.Action -eq "Validate") {
             return $oDialogResult.DialogResult.Form.GetValue($true)
+        } elseif ($oDialogResult.Action -eq "Back") {
+            return New-DialogResultAction -Action "Back"
         } else {
             return $null
         }

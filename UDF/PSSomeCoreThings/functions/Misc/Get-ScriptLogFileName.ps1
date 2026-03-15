@@ -22,7 +22,7 @@
     #>
 
     Param(
-        [string]$scriptName = $(Get-RootScriptName)
+        [string]$scriptName = $(Get-RootScriptInfo).Name
     )
     return $scriptName + "_" + $(Get-Date -Format "yyyy-MM-dd_HHmm") + ".log"
 }

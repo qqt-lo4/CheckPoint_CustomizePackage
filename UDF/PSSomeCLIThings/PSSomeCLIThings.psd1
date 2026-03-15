@@ -20,67 +20,7 @@
     PowerShellVersion = '5.1'
 
     # Functions to export from this module
-    FunctionsToExport = @(
-        # Other
-        'Convert-ConsoleColorToInt'
-        'Invoke-Pause'
-        'Invoke-Process'
-        'Read-Array'
-        'Wait-ProgressBar'
-        'Write-ColoredString'
-        'Write-Separator'
-
-        # Dialog\Base
-        'New-CLIDialog'
-        'New-CLIDialogButton'
-        'New-CLIDialogCheckBox'
-        'New-CLIDialogObjectsRow'
-        'New-CLIDialogProperty'
-        'New-CLIDialogRadioButton'
-        'New-CLIDialogSeparator'
-        'New-CLIDialogSpace'
-        'New-CLIDialogTableItems'
-        'New-CLIDialogText'
-        'New-CLIDialogTextBox'
-        'New-DialogResultAction'
-        'New-DialogResultScriptblock'
-        'New-DialogResultValue'
-
-        # Dialog
-        'Edit-Hashtable'
-        'Find-Object'
-        'Invoke-CLIDialog'
-        'Invoke-YesNoCLIDialog'
-        'Read-CLIDialogConnectionInfo'
-        'Read-CLIDialogCredential'
-        'Read-CLIDialogHashtable'
-        'Read-CLIDialogIP'
-        'Read-CLIDialogNumericValue'
-        'Read-CLIDialogValidatedValue'
-        'Select-CLIDialogCSVFile'
-        'Select-CLIDialogJsonFile'
-        'Select-CLIDialogObjectInArray'
-        'Select-CLIFileFromFolder'
-
-        # Format
-        'Format-ArrayHashtable'
-        'Format-CustomHeaderTable'
-        'Format-ListCustom'
-        'Format-PropertyToList'
-        'Format-TableCustom'
-        'Get-ColumnFormat'
-
-        # Menu
-        'Invoke-Menu'
-        'New-Menu'
-        'New-MenuAction'
-        'New-MenuItem'
-        'New-MenuRow'
-
-        # String
-        'Set-StringFormat'
-        'Set-StringUnderline'
-    )
+    FunctionsToExport = '*'
 
     # Cmdlets to export from this module
     CmdletsToExport   = @()

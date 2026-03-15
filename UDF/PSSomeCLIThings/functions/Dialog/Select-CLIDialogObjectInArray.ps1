@@ -246,7 +246,7 @@ function Select-CLIDialogObjectInArray {
         Module: CLIDialog
         Author: Loïc Ade
         Created: 2025-10-25
-        Version: 1.1.0
+        Version: 1.2.0
         Dependencies: New-CLIDialog, New-CLIDialogButton, New-CLIDialogSeparator, New-CLIDialogText,
                      New-CLIDialogTableItems, New-CLIDialogObjectsRow, Invoke-CLIDialog,
                      New-DialogResultValue, New-DialogResultAction, Invoke-YesNoCLIDialog,
@@ -311,6 +311,10 @@ function Select-CLIDialogObjectInArray {
         - Useful for dynamic actions like refresh, settings, custom operations
 
         CHANGELOG:
+
+        Version 1.2.0 - 2026-03-15 - Loïc Ade
+            - SelectedObjects and SelectedObjectsUniqueProperty now work in single select mode
+            - Automatically navigates to the page containing the selected object
 
         Version 1.1.0 - 2025-11-22 - Loïc Ade
             - Added support for simple type arrays (strings, numbers, booleans)
@@ -418,7 +422,8 @@ function Select-CLIDialogObjectInArray {
                 [switch]$MultiSelect,
                 [ref]$SelectedObjectsArray,
                 [string]$SelectedObjectsUniqueProperty,
-                [switch]$ShowBackButton
+                [switch]$ShowBackButton,
+                [int]$FocusedItemIndex = -1
             )
             $aCLIObject = @()
 
@@ -539,6 +544,10 @@ function Select-CLIDialogObjectInArray {
             }
 
             $oDialog = New-CLIDialog @hDialogParams
+            if ($FocusedItemIndex -ge 0) {
+                # Header row (1) + item index
+                $oDialog.FocusedRow = 1 + $FocusedItemIndex
+            }
             $oDialogResult = Invoke-CLIDialog -InputObject $oDialog
 
             return $oDialogResult
@@ -662,12 +671,27 @@ function Select-CLIDialogObjectInArray {
         $iPageNumber = 0
         $iPageCount = if ($aObjects.Count -eq 0) { 1 } else { [Math]::Floor(($aObjects.Count - 1) / $ItemsPerPage) + 1 }
 
-        # Initialize selected objects for MultiSelect
-        $aSelectedObjects = if ($MultiSelect -and $SelectedObjects) {
-            $sProperty = if ($SelectedObjectsUniqueProperty) { $SelectedObjectsUniqueProperty } else { $SelectedColumns[0] }
+        # Initialize selected objects
+        $sProperty = if ($SelectedObjectsUniqueProperty) { $SelectedObjectsUniqueProperty } else { if ($SelectedColumns) { $SelectedColumns[0] } }
+        $aSelectedObjects = if ($SelectedObjects -and $sProperty) {
             $aObjects | Where-Object { $_.$sProperty -in $SelectedObjects }
         } else {
             @()
+        }
+
+        # Navigate to page containing the selected object (single select default)
+        if (-not $MultiSelect -and $SelectedObjects -and $sProperty -and $aObjects.Count -gt 0) {
+            $iDefaultIndex = 0
+            for ($i = 0; $i -lt $aObjects.Count; $i++) {
+                if ($aObjects[$i].$sProperty -in $SelectedObjects) {
+                    $iDefaultIndex = $i
+                    break
+                }
+            }
+            $iPageNumber = [Math]::Floor($iDefaultIndex / $ItemsPerPage)
+            $iFocusedItemIndex = $iDefaultIndex - ($iPageNumber * $ItemsPerPage)
+        } else {
+            $iFocusedItemIndex = -1
         }
 
         # Initialize ArrayPageExtractor if requested
@@ -715,6 +739,12 @@ function Select-CLIDialogObjectInArray {
                 if ($OtherMenuItemsInvisibleHeader) {
                     $hDialogParams.OtherMenuItemsInvisibleHeader = $OtherMenuItemsInvisibleHeader
                 }
+            }
+
+            # Pre-select item
+            if ($iFocusedItemIndex -ge 0) {
+                $hDialogParams.FocusedItemIndex = $iFocusedItemIndex
+                $iFocusedItemIndex = -1
             }
 
             # Display dialog

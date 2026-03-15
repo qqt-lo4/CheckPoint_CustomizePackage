@@ -332,7 +332,7 @@ function Invoke-CLIDialog {
             )
             if ($Validate) {
                 $oResult = Show -Dialog $Dialog -DontSpaceAfterDialog:$DontSpaceAfterDialog
-                while ((-not $Dialog.IsValidForm()) -and ($oResult.Action -ne "Cancel") -and ($oResult.Action -ne "Exit")) {
+                while ((-not $Dialog.IsValidForm()) -and ($oResult.Action -ne "Cancel") -and ($oResult.Action -ne "Exit") -and ($oResult.Action -ne "Back")) {
                     Write-ErrorMessage -Dialog $Dialog -Details:$ErrorDetails -CustomErrorMessage $CustomErrorMessage
                     if ($PauseAfterErrorMessage) {
                         Invoke-Pause -ReplaceByLine -LineColor Red -MessageColor White
