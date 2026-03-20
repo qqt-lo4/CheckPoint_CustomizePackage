@@ -87,7 +87,7 @@
     .NOTES
         Author: Loïc Ade
         Created: 2025-01-16
-        Version: 1.0.0
+        Version: 1.0.1
         Module: CLIDialog
         Dependencies: Get-ColumnFormat, Copy-Hashtable, Convert-ConsoleColorToInt
 
@@ -98,6 +98,10 @@
         Content that exceeds column width is truncated with an ellipsis (…) character.
         Column alignment (left/right) is determined by the Get-ColumnFormat function
         based on data type.
+
+        History:
+        1.0.1 - 2026-03-20 - Fix: header underline now respects right-aligned columns
+        1.0.0 - 2025-01-16 - Initial version
 
     .LINK
         Format-Table
@@ -196,7 +200,11 @@
                 for($i = 0; $i -lt $aColumnFormat.Name.Count; $i++) {
                     $sPropertyName = $aColumnFormat.Name[$i]
                     $column = $hColumns[$sPropertyName]
-                    $sUnderLine += ("-" * $sPropertyName.Length) + (" " * ($column.Width - $sPropertyName.Length))
+                    if ($column.Alignment -eq "right") {
+                        $sUnderLine += (" " * ($column.Width - $sPropertyName.Length)) + ("-" * $sPropertyName.Length)
+                    } else {
+                        $sUnderLine += ("-" * $sPropertyName.Length) + (" " * ($column.Width - $sPropertyName.Length))
+                    }
                     if ($i -lt ($aColumnFormat.Name.Count - 1)) {
                         $sUnderLine += " "
                     }

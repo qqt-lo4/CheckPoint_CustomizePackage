@@ -53,7 +53,12 @@ function Write-ColoredString {
 
     .NOTES
         Author  : Loïc Ade
-        Version : 1.0.0
+        Version : 1.0.1
+
+        History:
+        1.0.1 - 2026-03-20 - Loïc Ade 
+            - Fix: trailing text after last match was not displayed
+        1.0.0 - Initial version
     #>
     Param(
         [Parameter(Mandatory, Position = 0, ValueFromPipeline)]
@@ -92,6 +97,10 @@ function Write-ColoredString {
                                 Write-Host -Object $sSubString -NoNewline -ForegroundColor $MatchForegroundColor -BackgroundColor $MatchBackgroundColor
                                 $j = $aCaptures[$i].Index + $aCaptures[$i].Length
                             }
+                        }
+                        if ($j -lt $_.Length) {
+                            $sSubString = $_.ToString().Substring($j)
+                            Write-Host -Object $sSubString -NoNewline -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
                         }
                         if (-not $NoNewLine) {
                             Write-Host ""

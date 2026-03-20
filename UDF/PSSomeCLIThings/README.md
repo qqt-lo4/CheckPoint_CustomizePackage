@@ -5,7 +5,7 @@ A PowerShell module for building interactive CLI interfaces: dialog system with 
 ## Features
 
 ### Dialog System
-Build interactive CLI dialogs with textboxes, buttons, checkboxes, radio buttons, and more. See the [full Dialog documentation](Dialog/DIALOG.md) for architecture details, component reference, patterns, and examples.
+Build interactive CLI dialogs with textboxes, buttons, checkboxes, radio buttons, and more. See the [full Dialog documentation](doc/DIALOG.md) for architecture details, component reference, patterns, and examples.
 
 #### Base Components
 
@@ -148,6 +148,8 @@ Invoke-Menu -Menu $menu
 ```powershell
 Get-Process | Select-Object -First 10 | Format-TableCustom -Property Name, Id, CPU -HeaderColor Cyan -HeaderUnderline
 ```
+
+
 
 ### Colored string output
 ```powershell

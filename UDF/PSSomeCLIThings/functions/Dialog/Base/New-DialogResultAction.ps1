@@ -143,6 +143,10 @@ function New-DialogResultAction {
     }
     if ($Value) {
         $hResult.Value = $Value
+    } else {
+        if ($Action -eq "Validate") {
+            
+        }
     }
     if ($Action -eq "Back") {
         $hResult.Depth = 0
