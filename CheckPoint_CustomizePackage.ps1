@@ -133,9 +133,9 @@ function Select-CheckPointPackage {
 
 function Download-CheckPointPackage {
     $oConnectionDialogResult = if ($Global:EPSAPI) {
-        Read-CLIDialogConnectionInfo -HeaderAppName "Harmony Endpoint Web server" -DefaultServer $EPSAPI.Server -DefaultPort $EPSAPI.Port -DefaultUsername $EPSAPI.User
+        Read-CLIDialogConnectionInfo -HeaderAppName "Harmony Endpoint Web server" -DefaultServer $EPSAPI.Server -DefaultPort $EPSAPI.Port -DefaultUsername $EPSAPI.User -AddCancel
     } else {
-        Read-CLIDialogConnectionInfo -HeaderAppName "Harmony Endpoint Web server"
+        Read-CLIDialogConnectionInfo -HeaderAppName "Harmony Endpoint Web server" -AddCancel
     }
     
     if ($null -ne $oConnectionDialogResult) {

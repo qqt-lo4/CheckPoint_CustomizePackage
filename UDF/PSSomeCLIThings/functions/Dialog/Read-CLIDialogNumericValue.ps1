@@ -118,7 +118,7 @@ function Read-CLIDialogNumericValue {
         Module: CLIDialog
         Author: Loïc Ade
         Created: 2025-10-27
-        Version: 1.0.0
+        Version: 1.1.0
         Dependencies: Read-CLIDialogValidatedValue
 
         This function is a specialized wrapper around Read-CLIDialogValidatedValue that provides
@@ -231,6 +231,10 @@ function Read-CLIDialogNumericValue {
 
         CHANGELOG:
 
+        Version 1.1.0 - 2026-03-21 - Loïc Ade
+            - Added AllowBack parameter to display a Back button
+            - Added ReturnDialogResult parameter for wizard workflows
+
         Version 1.0.0 - 2025-10-27 - Loïc Ade
             - Initial release
             - Integer and decimal number support
@@ -258,6 +262,8 @@ function Read-CLIDialogNumericValue {
         [allownull()]
         [double]$DefaultValue = $null,
         [switch]$AllowCancel,
+        [switch]$AllowBack,
+        [switch]$ReturnDialogResult,
         [string]$ErrorMessage = "Invalid value, please enter value with correct format."
     )
 
@@ -316,9 +322,20 @@ function Read-CLIDialogNumericValue {
         PropertyName = $PropertyName
         ValidationMethod = $sb
         AllowCancel = $AllowCancel
+        AllowBack = $AllowBack
     }
     if ($DefaultValue) {
         $hReadValueParameters.DefaultValue = $DefaultValue
     }
-    Read-CLIDialogValidatedValue @hReadValueParameters
+    $oResult = Read-CLIDialogValidatedValue @hReadValueParameters
+
+    # If result is a DialogResult action (Cancel/Back), handle based on ReturnDialogResult
+    if ($oResult -and $oResult.PSTypeNames -and $oResult.PSTypeNames[0] -like "DialogResult.Action.*" -and $oResult.PSTypeNames[0] -ne "DialogResult.Action.Validate") {
+        if ($ReturnDialogResult) {
+            return $oResult
+        }
+        return $null
+    }
+
+    return $oResult
 }

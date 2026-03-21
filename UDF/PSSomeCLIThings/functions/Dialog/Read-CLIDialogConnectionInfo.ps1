@@ -159,7 +159,7 @@ function Read-CLIDialogConnectionInfo {
         Module: CLIDialog
         Author: Loïc Ade
         Modified: 2025-11-22
-        Version: 1.0.1
+        Version: 2.0.0
         Dependencies: New-CLIDialogText, New-CLIDialogTextBox, New-CLIDialogSpace, New-CLIDialogButton, New-CLIDialogObjectsRow, New-CLIDialog, Invoke-CLIDialog, Invoke-YesNoCLIDialog, Set-StringUnderline
 
         This function is designed for applications that need to collect connection parameters
@@ -231,8 +231,14 @@ function Read-CLIDialogConnectionInfo {
 
         CHANGELOG:
 
+        Version 2.0.0 - 2026-03-21 - Loïc Ade
+            - BREAKING: Cancel button is no longer shown by default, use -AddCancel/-AllowCancel to display it
+            - Added AddCancel/AllowCancel parameter to conditionally show Cancel button
+            - Added AddBack/AllowBack parameter to add a Back button
+            - Added ReturnDialogResult parameter to return the raw DialogResult (for wizard workflows)
+
         Version 1.0.1 - 2025-11-22 - Loïc Ade
-            - Corrected an error when Cancel was pressed by user 
+            - Corrected an error when Cancel was pressed by user
 
         Version 1.0.0 - 2023-12-17 - Loïc Ade
             - Initial release
@@ -288,7 +294,12 @@ function Read-CLIDialogConnectionInfo {
         [string]$AppName,
         [Parameter(ParameterSetName = "Autodetect")]
         [object]$Config = $Global:Config,
-        [switch]$AsHashtable
+        [switch]$AsHashtable,
+        [Alias("AllowCancel")]
+        [switch]$AddCancel,
+        [Alias("AllowBack")]
+        [switch]$AddBack,
+        [switch]$ReturnDialogResult
     )
     Begin {
         if (($null -ne $ConnectionInfo) -and ($ConnectionInfo.PSObject.TypeNames[0] -ne "ConnectionInfo")) {
@@ -453,16 +464,25 @@ function Read-CLIDialogConnectionInfo {
                 $iCurrentLine = $iPreviousLine + 1
                 $aEmptyLines += $iCurrentLine
             }
-            $aRows += New-CLIDialogObjectsRow -Row @(
+            $aButtonRow = @(
                 New-CLIDialogSpace -Length ($iSpaceLength + $Prefix.Length + 2)
                 New-CLIDialogButton -Text "OK" -Underline 0 -Keyboard O -Validate @hButtonColorOptions
-                New-CLIDialogButton -Text "Cancel" -Underline 0 -Keyboard C -Cancel @hButtonColorOptions
             )
+            if ($AddCancel) {
+                $aButtonRow += New-CLIDialogButton -Text "Cancel" -Underline 0 -Keyboard C -Cancel @hButtonColorOptions
+            }
+            if ($AddBack) {
+                $aButtonRow += New-CLIDialogButton -Text "Back" -Underline 0 -Keyboard B -Back @hButtonColorOptions
+            }
+            $aRows += New-CLIDialogObjectsRow -Row $aButtonRow
             
             $oDialog = New-CLIDialog -Rows $aRows
             $oDialog.FocusedRow = if ($aEmptyLines.Count -eq 0) { 0 } else { $aEmptyLines[0] }
             $oDialogResult = Invoke-CLIDialog -InputObject $oDialog -Validate -ErrorDetails -PauseAfterErrorMessage
-            if ($oDialogResult.PSTypeNames[0] -eq "DialogResult.Action.Cancel") {
+            if ($oDialogResult.PSTypeNames[0] -like "DialogResult.Action.*" -and $oDialogResult.PSTypeNames[0] -ne "DialogResult.Action.Validate") {
+                if ($ReturnDialogResult) {
+                    return $oDialogResult
+                }
                 $oResult = $null
             } else {
                 $hResult = $oDialogResult.DialogResult.Form.GetValue()

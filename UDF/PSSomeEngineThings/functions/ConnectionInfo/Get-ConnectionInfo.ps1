@@ -68,7 +68,7 @@ function Get-ConnectionInfo {
             if ($Global:Config.Apps.$Name.Username) {
                 $hReadConnectInfoArgs.DefaultUsername = $Global:Config.Apps.$Name.Username
             }
-            $hReadConnectInfoResults = Read-CLIDialogConnectionInfo @hReadConnectInfoArgs -AsHashtable -HeaderAppName $Name
+            $hReadConnectInfoResults = Read-CLIDialogConnectionInfo @hReadConnectInfoArgs -AsHashtable -HeaderAppName $Name -AddCancel
             if ($hReadConnectInfoResults -ne $null) {
                 if ($null -eq $Global:ConnectionInfo) {
                     $Global:ConnectionInfo = @{}

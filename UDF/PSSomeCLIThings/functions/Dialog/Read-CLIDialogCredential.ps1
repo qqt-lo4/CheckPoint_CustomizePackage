@@ -81,7 +81,16 @@ function Read-CLIDialogCredential {
 
     .PARAMETER AddCancel
         Switch parameter. When set, adds a Cancel button to the dialog in addition to the OK button.
-        Note: Currently not implemented in the underlying Read-CLIDialogConnectionInfo function.
+        Alias: AllowCancel
+
+    .PARAMETER AddBack
+        Switch parameter. When set, adds a Back button to the dialog.
+        Alias: AllowBack
+
+    .PARAMETER ReturnDialogResult
+        Switch parameter. When set, returns the raw DialogResult object instead of $null
+        on Cancel or Back actions. Useful for wizard workflows that need to distinguish
+        between Cancel and Back.
 
     .OUTPUTS
         Returns a PSCredential object containing the username and password.
@@ -118,7 +127,7 @@ function Read-CLIDialogCredential {
         Author: Loïc Ade
         Created: 2025-10-01
         Modified: 2025-10-23
-        Version: 2.0.0
+        Version: 3.0.0
         Dependencies: Read-CLIDialogConnectionInfo
 
         This function is a simplified wrapper around Read-CLIDialogConnectionInfo that
@@ -159,6 +168,12 @@ function Read-CLIDialogCredential {
         - Cancellation returns $null (not an error)
 
         CHANGELOG:
+
+        Version 3.0.0 - 2026-03-21 - Loïc Ade
+            - Added AllowCancel alias for AddCancel parameter
+            - Added AddBack/AllowBack parameter for Back button support
+            - Added ReturnDialogResult parameter for wizard workflows
+            - AddCancel is now correctly transmitted to Read-CLIDialogConnectionInfo
 
         Version 2.0.0 - 2025-10-23 - Loïc Ade
             - Refactored to use Read-CLIDialogConnectionInfo internally
@@ -202,7 +217,11 @@ function Read-CLIDialogCredential {
         [System.ConsoleColor]$FocusedButtonForegroundColor = (Get-Host).UI.RawUI.BackgroundColor,
         [string]$Prefix = "  ",
         [string]$FocusedPrefix = "> ",
+        [Alias("AllowCancel")]
         [switch]$AddCancel,
+        [Alias("AllowBack")]
+        [switch]$AddBack,
+        [switch]$ReturnDialogResult,
         [string]$HeaderAppName = ""
     )
 
@@ -241,10 +260,18 @@ function Read-CLIDialogCredential {
         FocusedPrefix = $FocusedPrefix
         DefaultUsername = $PreviousUsername
         HeaderAppName = $HeaderAppName
+        AddCancel = $AddCancel
+        AddBack = $AddBack
+        ReturnDialogResult = $ReturnDialogResult
     }
 
     # Call Read-CLIDialogConnectionInfo
     $oResult = Read-CLIDialogConnectionInfo @hParams
+
+    # If ReturnDialogResult and result is a DialogResult action, pass it through
+    if ($oResult -and $oResult.PSTypeNames -and $oResult.PSTypeNames[0] -like "DialogResult.Action.*") {
+        return $oResult
+    }
 
     # Convert the ConnectionInfo result to PSCredential
     if ($oResult) {

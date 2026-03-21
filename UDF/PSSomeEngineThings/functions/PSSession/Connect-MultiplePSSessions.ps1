@@ -41,7 +41,7 @@ function Connect-MultiplePSSessions {
     }
     foreach ($oComputerName in $ComputerName) {
         if ($aCredential.Count -eq 0) {
-            $oPSCredDialogResult = Read-CLIDialogConnectionInfo -Credential -ConnectionInfo $Global:PSCred -AskInForm -HeaderAppName $oComputerName
+            $oPSCredDialogResult = Read-CLIDialogConnectionInfo -Credential -ConnectionInfo $Global:PSCred -AskInForm -HeaderAppName $oComputerName -AddCancel
             if ($oPSCredDialogResult.PSTypeNames[0] -eq "DialogResult.Value") {
                 $aCredential += $oPSCredDialogResult.Value.GetCredential()    
             }
@@ -52,7 +52,7 @@ function Connect-MultiplePSSessions {
             if ($oSession.Success) {
                 $hSessions.$oComputerName = $oSession.Session
             } else {
-                $oPSCredDialogResult = Read-CLIDialogConnectionInfo -Credential -ConnectionInfo $Global:PSCred -AskInForm -HeaderAppName $oComputerName
+                $oPSCredDialogResult = Read-CLIDialogConnectionInfo -Credential -ConnectionInfo $Global:PSCred -AskInForm -HeaderAppName $oComputerName -AddCancel
                 if ($oPSCredDialogResult.PSTypeNames[0] -eq "DialogResult.Value") {
                     $aCredential += $oPSCredDialogResult.Value.GetCredential()    
                 }
